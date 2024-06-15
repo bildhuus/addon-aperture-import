@@ -310,9 +310,7 @@ function generateMetadata(library, bundlepath, version, masters, keywords, filen
 	//print(xmp);
 
 	// create the XMP sidecar file
-	var xmppath = stripExtension(fil.path()) + ".xmp";
-	print("WRITE XMP TO " + xmppath);
-	library.createTextFile(fil.owner(), xmppath, xmp);
+	library.modifyFileMetadata(fil, xmp);
 }
 
 function getFolders(db)
