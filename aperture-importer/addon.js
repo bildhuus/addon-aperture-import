@@ -6,16 +6,14 @@ registerAddon("bildhuus_aperture_importer", {
 })
 
 registerAction("importApertureLibrary", function() {
-	/*var bundle = chooseDirectory({
+	var bundle = chooseDirectory({
 			formats: [{
 				name: "Aperture Library",
 				patterns: ["*.aplibrary"]
 			}]
 		});
 	if (bundle === null)
-		return;*/
-
-	var bundlepath = "file:///C:/Users/soenke/Desktop/Aperture%20Library/Aperture%20Library.aplibrary";
+		return;
 
 	var file = bundlepath + "/Database/apdb/Library.apdb";
 	print("Opening database: " + file);
@@ -25,7 +23,7 @@ registerAction("importApertureLibrary", function() {
 		return;
 	}
 
-	//try {
+	try {
 		var db = openSQLiteDatabase(file);
 
 		// retreive all relevant database records
@@ -80,11 +78,11 @@ registerAction("importApertureLibrary", function() {
 
 		alert("The Aperture library has been imported successfully.",
 			"Aperture Import Finished");
-	/*} catch (e) {
+	} catch (e) {
 		print(e);
 		alert("An error occurred while importing the Aperture library: \n\n" + e,
 			"Error importing library");
-	}*/
+	}
 });
 
 addMenuEntry("importApertureLibrary", "Import Aperture Library…", "");
@@ -120,8 +118,6 @@ function importProjectFolderAsEvent(library, bundlepath, folder_uuid, project_na
 		}
 	}
 
-print("improt files")
-print("n = " + files.length);
 	// determine which files still need to be imported and insert the remaining
 	// ones into the filenodes map
 	var importfiles = []
@@ -144,7 +140,6 @@ print("n = " + files.length);
 	if (!importfiles.length)
 		return;
 
-print("craete event " + importfiles.length)
 	// create a new event to import into
 	var evt = library.createEvent(project_name);
 
@@ -297,6 +292,8 @@ function generateMetadata(library, bundlepath, version, masters, keywords, filen
 
 	// skip if there is no metadata
 	if (xmp == "") return;
+
+	print("Adjusting metadata for " + fil.path() + "...");
 
 	xmp = ''
 		+ '<x:xmpmeta xmlns:x="adobe:ns:meta/" x:xmptk="Adobe XMP Core 5.6-c011 79.156380, 2014/05/21-23:38:37">\n'
