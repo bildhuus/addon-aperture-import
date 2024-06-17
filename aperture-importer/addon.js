@@ -6,16 +6,16 @@ registerAddon("bildhuus_aperture_importer", {
 })
 
 registerAction("importApertureLibrary", function() {
-	var bundlepath = chooseFile({
+	var bundleurl = chooseFile({
 			formats: [{
 				name: "Aperture Library",
 				patterns: ["*.aplibrary"]
 			}]
 		});
-	if (bundlepath === null)
+	if (bundleurl === null)
 		return;
 
-	var file = bundlepath + "/Database/apdb/Library.apdb";
+	var file = bundleurl + "/Database/apdb/Library.apdb";
 	print("Opening database: " + file);
 
 	if (!existsFile(file)) {
@@ -52,7 +52,7 @@ registerAction("importApertureLibrary", function() {
 				print("FOLDERS " + folders);
 			if (folder.folderType == 2) {
 				print("Creating event \""+folder.name+"\" for project with UUID \""+fuuid+"\"...");
-				importProjectFolderAsEvent(library, bundlepath, fuuid, folder.name, versions, masters, filenodes);
+				importProjectFolderAsEvent(library, bundleurl, fuuid, folder.name, versions, masters, filenodes);
 				print("OUT");
 			}
 		}
@@ -74,7 +74,7 @@ registerAction("importApertureLibrary", function() {
 		// RAW/JPEG pairs share the same sidecar
 		print("Converting Aperture metadata to XMP metadata...");
 		for (vuuid in versions)
-			generateMetadata(library, bundlepath, versions[vuuid], masters, keywords, filenodes);
+			generateMetadata(library, bundleurl, versions[vuuid], masters, keywords, filenodes);
 
 		alert("The Aperture library has been imported successfully.",
 			"Aperture Import Finished");
@@ -88,7 +88,7 @@ registerAction("importApertureLibrary", function() {
 addMenuEntry("importApertureLibrary", "Import Aperture Library…", "");
 
 
-function importProjectFolderAsEvent(library, bundlepath, folder_uuid, project_name, versions, masters, filenodes)
+function importProjectFolderAsEvent(library, bundleurl, folder_uuid, project_name, versions, masters, filenodes)
 {
 	var files = []
 
@@ -96,7 +96,7 @@ function importProjectFolderAsEvent(library, bundlepath, folder_uuid, project_na
 	{
 		if (!master_uuid) return;
 
-		var path = getMasterFilePath(bundlepath, masters[master_uuid]);
+		var path = getMasterFileURL(bundleurl, masters[master_uuid]);
 		if (path) {
 			var hidden = master_uuid != ver.masterUuid;
 			files.push({
@@ -160,7 +160,7 @@ function importProjectFolderAsEvent(library, bundlepath, folder_uuid, project_na
 	}
 }
 
-function getMasterFilePath(bundlepath, master)
+function getMasterFileURL(bundleurl, master)
 {
 	if (master.fileVolumeUuid) {
 		// TODO: support referenced files!
@@ -168,7 +168,7 @@ function getMasterFilePath(bundlepath, master)
 		return null;
 	}
 
-	return bundlepath + "/Masters/" + master.imagePath;
+	return bundleurl + "/Masters/" + encodeInetPath(master.imagePath);
 }
 
 function createCollectionFromAlbum(library, album, folders, versions, filenodes)
@@ -260,7 +260,7 @@ function getLibraryFolderGroup(library, folder, folders)
 }
 
 
-function generateMetadata(library, bundlepath, version, masters, keywords, filenodes)
+function generateMetadata(library, bundleurl, version, masters, keywords, filenodes)
 {
 	var master = masters[version.masterUuid];
 	var fil = filenodes[version.masterUuid];
