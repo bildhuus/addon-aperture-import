@@ -6,13 +6,13 @@ registerAddon("bildhuus_aperture_importer", {
 })
 
 registerAction("importApertureLibrary", function() {
-	var bundle = chooseDirectory({
+	var bundlepath = chooseFile({
 			formats: [{
 				name: "Aperture Library",
 				patterns: ["*.aplibrary"]
 			}]
 		});
-	if (bundle === null)
+	if (bundlepath === null)
 		return;
 
 	var file = bundlepath + "/Database/apdb/Library.apdb";
