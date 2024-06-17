@@ -223,14 +223,14 @@ function createCollectionFromAlbum(library, album, folders, versions, filenodes)
 // are note mapped to a group node, in which case null will be returned instead.
 function getLibraryFolderGroup(library, folder, folders)
 {
-	if (!folder || folder.folderType == 2 || folder.parentFolderUuid == "TopLevelAlbums"
+	if (!folder || folder.parentFolderUuid == "TopLevelAlbums"
 		|| folder.parentFolderUuid == "LibraryFolder")
 	{
 		return null;
 	}
 
 	var parentfolder = folders[folder.parentFolderUuid];
-	var parent = getLibraryFolder(library, parentfolder);
+	var parent = getLibraryFolderGroup(library, parentfolder, folders);
 
 	// look for an existing group
 	var grpnode;
@@ -253,7 +253,7 @@ function getLibraryFolderGroup(library, folder, folders)
 		}
 		grpnode = library.createRawNode("Group", grpnodeinfo);
 		if (parent === null) library.rootNode().groupItems().add(grpnode);
-		else parent.items.add(grpnode);
+		else parent.items().add(grpnode);
 	}
 
 	return grpnode;
