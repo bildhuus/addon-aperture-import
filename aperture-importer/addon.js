@@ -446,19 +446,3 @@ function getAlbumVersions(db, album_id)
 	}
 	return ret;
 }
-
-function stripExtension(path)
-{
-	if (path.length == 0)
-		return path;
-
-	var idx = path.length - 1;
-	while (idx >= 0 && path.charAt(idx) != '/' && path.charAt(idx) != '\\')
-		idx--;
-
-	var didx = path.length - 1;
-	while (didx >= 0 && path.charAt(didx) != '.')
-		didx--;
-
-	return didx > idx ? path.substr(0, didx) : path;
-}
