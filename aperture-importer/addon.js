@@ -40,7 +40,7 @@ registerAction("importApertureLibrary", function() {
 		//print("\nVersions: " + toJSON(versions));
 		//print("\nMasters: " + toJSON(masters));
 
-		// maps master uuid to library node
+		// maps from master UUIDs to library file nodes
 		var filenodes = {}
 
 		// 1. convert all projects (folder type == 2) to events and import the
@@ -57,7 +57,7 @@ registerAction("importApertureLibrary", function() {
 			}
 		}
 		
-		// 2. create matching folders for plain folders and convert all non-project
+		// 2. create matching groups for plain folders and convert all non-project
 		// albums to collections
 		print("Converting Aperture albums, books etc. to collections...");
 		for (auuid in albums) {
